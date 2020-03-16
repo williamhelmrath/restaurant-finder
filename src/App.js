@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import SearchForm from "./components/SearchForm";
@@ -31,6 +30,7 @@ export default function App() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const steps = getSteps();
 
   const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
@@ -45,9 +45,17 @@ export default function App() {
           ></SearchForm>
         );
       case 1:
-        return <SelectForm searchTerm={searchTerm}></SelectForm>;
+        return (
+          <SelectForm
+            handleNext={handleNext}
+            searchTerm={searchTerm}
+            setSelectedRestaurant={setSelectedRestaurant}
+          ></SelectForm>
+        );
       case 2:
-        return <ReserveForm></ReserveForm>;
+        return (
+          <ReserveForm selectedRestaurant={selectedRestaurant}></ReserveForm>
+        );
       default:
         return "Unknown step";
     }

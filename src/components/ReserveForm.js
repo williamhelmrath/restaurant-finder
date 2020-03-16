@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function ReserveForm() {
-  return <div>This is the reserve form</div>;
+export default function ReserveForm({ selectedRestaurant }) {
+  return <div>You have selected {selectedRestaurant}</div>;
 }
