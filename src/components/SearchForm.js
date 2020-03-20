@@ -16,7 +16,10 @@ export default function SearchForm({ handleNext, setSearchTerm }) {
 
   const handleMouseDownSearch = event => event.preventDefault();
 
-  const updateSearchTerm = e => (searchTerm = e.target.value);
+  const updateSearchTerm = e => {
+    searchTerm = e.target.value;
+    console.log(searchTerm);
+  };
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -31,6 +34,7 @@ export default function SearchForm({ handleNext, setSearchTerm }) {
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
+                disabled={searchTerm.length > 1}
                 onClick={handleSearch}
                 onMouseDown={handleMouseDownSearch}
               >

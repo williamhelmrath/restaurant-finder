@@ -70,6 +70,7 @@ export default function SelectForm({
 
   const handleChange = event => {
     setValue(event.target.value);
+    console.log(value);
   };
 
   const handleClick = () => {
@@ -81,59 +82,69 @@ export default function SelectForm({
     forwardGeocode(searchTerm);
   }, [searchTerm]);
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "flex-end"
-      }}
-    >
-      <FormControl component="fieldset">
-        <RadioGroup
-          aria-label="restaurants"
-          value={value}
-          onChange={handleChange}
+  if (restaurants.length > 0) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "flex-end"
+        }}
+      >
+        <FormControl component="fieldset">
+          <RadioGroup
+            aria-label="restaurants"
+            value={value}
+            onChange={handleChange}
+          >
+            {restaurants.map(restaurant => {
+              return (
+                <FormControlLabel
+                  key={restaurant.name}
+                  value={restaurant.name}
+                  control={<Radio />}
+                  label={restaurant.name}
+                />
+              );
+            })}
+          </RadioGroup>
+        </FormControl>
+
+        <MapGL
+          {...viewport}
+          mapStyle="mapbox://styles/mapbox/streets-v11"
+          mapboxApiAccessToken={MAPBOX_KEY}
+          onViewportChange={viewport => setViewport(viewport)}
         >
           {restaurants.map(restaurant => {
             return (
-              <FormControlLabel
+              <Marker
                 key={restaurant.name}
-                value={restaurant.name}
-                control={<Radio />}
-                label={restaurant.name}
-              />
+                longitude={restaurant.geometry.location.lng}
+                latitude={restaurant.geometry.location.lat}
+              >
+                <Pin size={25} />
+              </Marker>
             );
           })}
-        </RadioGroup>
-      </FormControl>
+          <div className="nav" style={navStyle}>
+            <NavigationControl
+              onViewportChange={viewport => setViewport(viewport)}
+            />
+          </div>
+        </MapGL>
 
-      <MapGL
-        {...viewport}
-        mapStyle="mapbox://styles/mapbox/streets-v11"
-        mapboxApiAccessToken={MAPBOX_KEY}
-        onViewportChange={viewport => setViewport(viewport)}
-      >
-        {restaurants.map(restaurant => {
-          return (
-            <Marker
-              longitude={restaurant.geometry.location.lng}
-              latitude={restaurant.geometry.location.lat}
-            >
-              <Pin size={25} />
-            </Marker>
-          );
-        })}
-        <div className="nav" style={navStyle}>
-          <NavigationControl
-            onViewportChange={viewport => setViewport(viewport)}
-          />
-        </div>
-      </MapGL>
-
-      <Button color="primary" variant="outlined" onClick={handleClick}>
-        Next
-      </Button>
-    </div>
-  );
+        <Button
+          disabled={value == null}
+          color="primary"
+          variant="outlined"
+          onClick={handleClick}
+        >
+          Next
+        </Button>
+      </div>
+    );
+  } else {
+    return <p>Sorry, there are no restaurants in that area</p>;
+  }
 }
