@@ -29,7 +29,9 @@ const navStyle = {
 export default function SelectForm({
   setSelectedRestaurant,
   handleNext,
-  searchTerm
+  handleBack,
+  searchTerm,
+  setSearchTerm
 }) {
   const [restaurants, setRestaurants] = useState([]);
   const [value, setValue] = useState(null);
@@ -47,24 +49,27 @@ export default function SelectForm({
     axios
       .get(mapboxUrl + location + ".json?access_token=" + MAPBOX_KEY)
       .then(res => {
-        const long = res.data.features[0].center[0];
-        const lat = res.data.features[0].center[1];
-        // setViewport({ latitude: lat, longitude: long });
+        console.log(res);
+        if (res.data.features.length > 0) {
+          const long = res.data.features[0].center[0];
+          const lat = res.data.features[0].center[1];
+          // setViewport({ latitude: lat, longitude: long });
 
-        axios
-          .get(
-            corsUrl +
-              googlePlacesUrl +
-              lat +
-              ", " +
-              long +
-              "&radius=500&type=restaurant&key=" +
-              GOOGLE_KEY
-          )
-          .then(res => {
-            setRestaurants(res.data.results);
-            console.log(res.data.results);
-          });
+          axios
+            .get(
+              corsUrl +
+                googlePlacesUrl +
+                lat +
+                ", " +
+                long +
+                "&radius=500&type=restaurant&key=" +
+                GOOGLE_KEY
+            )
+            .then(res => {
+              setRestaurants(res.data.results);
+              console.log(res.data.results);
+            });
+        }
       });
   };
 
@@ -76,6 +81,11 @@ export default function SelectForm({
   const handleClick = () => {
     setSelectedRestaurant(value);
     handleNext();
+  };
+
+  const goBack = () => {
+    setSearchTerm("");
+    handleBack();
   };
 
   useEffect(() => {
@@ -145,6 +155,13 @@ export default function SelectForm({
       </div>
     );
   } else {
-    return <p>Sorry, there are no restaurants in that area</p>;
+    return (
+      <div>
+        <p>Sorry, there are no restaurants in that area</p>
+        <Button color="secondary" variant="outlined" onClick={goBack}>
+          Back
+        </Button>
+      </div>
+    );
   }
 }

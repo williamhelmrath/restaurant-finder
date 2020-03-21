@@ -6,9 +6,7 @@ import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 
-let searchTerm = "";
-
-export default function SearchForm({ handleNext, setSearchTerm }) {
+export default function SearchForm({ handleNext, setSearchTerm, searchTerm }) {
   const handleSearch = () => {
     setSearchTerm(searchTerm);
     handleNext();
@@ -17,8 +15,8 @@ export default function SearchForm({ handleNext, setSearchTerm }) {
   const handleMouseDownSearch = event => event.preventDefault();
 
   const updateSearchTerm = e => {
-    searchTerm = e.target.value;
-    console.log(searchTerm);
+    setSearchTerm(e.target.value);
+    console.log(searchTerm.length === 0);
   };
 
   return (
@@ -34,11 +32,12 @@ export default function SearchForm({ handleNext, setSearchTerm }) {
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                disabled={searchTerm.length > 1}
+                disabled={searchTerm.length === 0}
                 onClick={handleSearch}
                 onMouseDown={handleMouseDownSearch}
               >
                 <SearchIcon></SearchIcon>
+                {console.log("hello")}
               </IconButton>
             </InputAdornment>
           }

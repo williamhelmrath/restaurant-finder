@@ -35,6 +35,8 @@ export default function App() {
 
   const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
 
+  const handleBack = () => setActiveStep(prevActiveStep => prevActiveStep - 1);
+
   const getStepContent = step => {
     switch (step) {
       case 0:
@@ -42,6 +44,7 @@ export default function App() {
           <SearchForm
             handleNext={handleNext}
             setSearchTerm={setSearchTerm}
+            searchTerm={searchTerm}
           ></SearchForm>
         );
       case 1:
@@ -50,6 +53,8 @@ export default function App() {
             handleNext={handleNext}
             searchTerm={searchTerm}
             setSelectedRestaurant={setSelectedRestaurant}
+            handleBack={handleBack}
+            setSearchTerm={setSearchTerm}
           ></SelectForm>
         );
       case 2:
@@ -65,7 +70,7 @@ export default function App() {
     <div className={classes.root}>
       <Paper style={{ margin: "3vh", padding: "3vh" }}>
         <Stepper activeStep={activeStep}>
-          {steps.map((label, index) => {
+          {steps.map(label => {
             const stepProps = {};
             const labelProps = {};
 
