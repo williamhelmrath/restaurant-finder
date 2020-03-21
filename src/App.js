@@ -52,6 +52,7 @@ export default function App() {
           <SelectForm
             handleNext={handleNext}
             searchTerm={searchTerm}
+            selectedRestaurant={selectedRestaurant}
             setSelectedRestaurant={setSelectedRestaurant}
             handleBack={handleBack}
             setSearchTerm={setSearchTerm}
@@ -89,20 +90,7 @@ export default function App() {
               </Typography>
             </div>
           ) : (
-            <div style={{ padding: "1vh" }}>
-              {getStepContent(activeStep)}
-
-              {/* <div>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleNext}
-                  className={classes.button}
-                >
-                  {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                </Button>
-              </div> */}
-            </div>
+            <div style={{ padding: "1vh" }}>{getStepContent(activeStep)}</div>
           )}
         </div>
       </Paper>

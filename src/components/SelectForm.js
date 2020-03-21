@@ -28,17 +28,17 @@ const navStyle = {
 
 export default function SelectForm({
   setSelectedRestaurant,
+  selectedRestaurant,
   handleNext,
   handleBack,
   searchTerm,
   setSearchTerm
 }) {
   const [restaurants, setRestaurants] = useState([]);
-  const [value, setValue] = useState(null);
   const [viewport, setViewport] = useState({
     latitude: 37.5,
     longitude: -96,
-    zoom: 3.8,
+    zoom: 14,
     bearing: 0,
     pitch: 1,
     width: "40vh",
@@ -49,11 +49,10 @@ export default function SelectForm({
     axios
       .get(mapboxUrl + location + ".json?access_token=" + MAPBOX_KEY)
       .then(res => {
-        console.log(res);
         if (res.data.features.length > 0) {
           const long = res.data.features[0].center[0];
           const lat = res.data.features[0].center[1];
-          // setViewport({ latitude: lat, longitude: long });
+          setViewport({ ...viewport, latitude: lat, longitude: long });
 
           axios
             .get(
@@ -74,13 +73,7 @@ export default function SelectForm({
   };
 
   const handleChange = event => {
-    setValue(event.target.value);
-    console.log(value);
-  };
-
-  const handleClick = () => {
-    setSelectedRestaurant(value);
-    handleNext();
+    setSelectedRestaurant(JSON.parse(event.target.value));
   };
 
   const goBack = () => {
@@ -91,6 +84,20 @@ export default function SelectForm({
   useEffect(() => {
     forwardGeocode(searchTerm);
   }, [searchTerm]);
+
+  const renderPopup = () => {
+    return (
+      <Popup
+        tipSize={5}
+        anchor="top"
+        longitude={selectedRestaurant.geometry.location.lng}
+        latitude={selectedRestaurant.geometry.location.lat}
+        closeOnClick={false}
+      >
+        {selectedRestaurant.name}
+      </Popup>
+    );
+  };
 
   if (restaurants.length > 0) {
     return (
@@ -104,14 +111,14 @@ export default function SelectForm({
         <FormControl component="fieldset">
           <RadioGroup
             aria-label="restaurants"
-            value={value}
+            value={JSON.stringify(selectedRestaurant)}
             onChange={handleChange}
           >
             {restaurants.map(restaurant => {
               return (
                 <FormControlLabel
                   key={restaurant.name}
-                  value={restaurant.name}
+                  value={JSON.stringify(restaurant)}
                   control={<Radio />}
                   label={restaurant.name}
                 />
@@ -137,6 +144,7 @@ export default function SelectForm({
               </Marker>
             );
           })}
+          {selectedRestaurant ? renderPopup() : null}
           <div className="nav" style={navStyle}>
             <NavigationControl
               onViewportChange={viewport => setViewport(viewport)}
@@ -145,10 +153,10 @@ export default function SelectForm({
         </MapGL>
 
         <Button
-          disabled={value == null}
+          disabled={selectedRestaurant == null}
           color="primary"
           variant="outlined"
-          onClick={handleClick}
+          onClick={handleNext}
         >
           Next
         </Button>

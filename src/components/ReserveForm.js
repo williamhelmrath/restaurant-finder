@@ -3,7 +3,7 @@ import React from "react";
 export default function ReserveForm({ selectedRestaurant }) {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      You have selected {selectedRestaurant}.
+      You have selected {selectedRestaurant.name}.
     </div>
   );
 }
