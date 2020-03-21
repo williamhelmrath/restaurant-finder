@@ -38,9 +38,9 @@ export default function SelectForm({
   const [viewport, setViewport] = useState({
     latitude: 37.5,
     longitude: -96,
-    zoom: 14,
+    zoom: 14.33,
     bearing: 0,
-    pitch: 1,
+    pitch: 10,
     width: "40vh",
     height: "40vh"
   });
@@ -66,14 +66,13 @@ export default function SelectForm({
             )
             .then(res => {
               setRestaurants(res.data.results);
-              console.log(res.data.results);
             });
         }
       });
   };
 
-  const handleChange = event => {
-    setSelectedRestaurant(JSON.parse(event.target.value));
+  const handleChange = e => {
+    setSelectedRestaurant(JSON.parse(e.target.value));
   };
 
   const goBack = () => {
@@ -104,11 +103,18 @@ export default function SelectForm({
       <div
         style={{
           display: "flex",
-          justifyContent: "space-around",
+          justifyContent: "space-between",
           alignItems: "flex-end"
         }}
       >
-        <FormControl component="fieldset">
+        <FormControl
+          component="fieldset"
+          style={{
+            maxHeight: "50vh",
+            overflow: "scroll",
+            overflowX: "hidden"
+          }}
+        >
           <RadioGroup
             aria-label="restaurants"
             value={JSON.stringify(selectedRestaurant)}
@@ -132,6 +138,7 @@ export default function SelectForm({
           mapStyle="mapbox://styles/mapbox/streets-v11"
           mapboxApiAccessToken={MAPBOX_KEY}
           onViewportChange={viewport => setViewport(viewport)}
+          style={{ margin: "1vh", flex: 1 }}
         >
           {restaurants.map(restaurant => {
             return (
@@ -151,15 +158,19 @@ export default function SelectForm({
             />
           </div>
         </MapGL>
-
-        <Button
-          disabled={selectedRestaurant == null}
-          color="primary"
-          variant="outlined"
-          onClick={handleNext}
-        >
-          Next
-        </Button>
+        <div>
+          <Button color="secondary" variant="outlined" onClick={goBack}>
+            Back
+          </Button>
+          <Button
+            disabled={selectedRestaurant == null}
+            color="primary"
+            variant="outlined"
+            onClick={handleNext}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     );
   } else {

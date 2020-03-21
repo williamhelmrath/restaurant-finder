@@ -12,12 +12,9 @@ export default function SearchForm({ handleNext, setSearchTerm, searchTerm }) {
     handleNext();
   };
 
-  const handleMouseDownSearch = event => event.preventDefault();
+  const handleMouseDownSearch = e => e.preventDefault();
 
-  const updateSearchTerm = e => {
-    setSearchTerm(e.target.value);
-    console.log(searchTerm.length === 0);
-  };
+  const updateSearchTerm = e => setSearchTerm(e.target.value);
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -37,7 +34,6 @@ export default function SearchForm({ handleNext, setSearchTerm, searchTerm }) {
                 onMouseDown={handleMouseDownSearch}
               >
                 <SearchIcon></SearchIcon>
-                {console.log("hello")}
               </IconButton>
             </InputAdornment>
           }
