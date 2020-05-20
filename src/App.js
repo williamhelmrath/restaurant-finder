@@ -72,12 +72,9 @@ export default function App() {
       <Paper style={{ margin: "3vh", padding: "3vh" }}>
         <Stepper activeStep={activeStep}>
           {steps.map(label => {
-            const stepProps = {};
-            const labelProps = {};
-
             return (
-              <Step key={label} {...stepProps}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
               </Step>
             );
           })}
